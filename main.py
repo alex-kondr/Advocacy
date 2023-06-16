@@ -12,6 +12,7 @@ app_dir = Path(__file__).parent
 
 app = FastAPI()
 app.mount("/src/routes/static", StaticFiles(directory="src/routes/static"), name="routes_static")
+app.mount("/src/routes/img", StaticFiles(directory="src/routes/img"), name="routes_img")
 templates = Jinja2Templates(directory=app_dir / "src/routes/templates")
 
 app.include_router(auth.router)
