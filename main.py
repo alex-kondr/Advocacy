@@ -10,12 +10,19 @@ app_dir = Path(__file__).parent
 
 app = FastAPI()
 app.mount("/src/static", StaticFiles(directory="src/static"), name="static")
+app.mount("/123", StaticFiles(directory="123"), name="nicepage")
 templates = Jinja2Templates(directory=app_dir / "src/templates")
+test = Jinja2Templates(directory=app_dir / "123")
 
 
 @app.get('/')
 def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+
+
+@app.get('/test')
+def index_test(request: Request):
+    return test.TemplateResponse("index.html", {"request": request})
 
 
 if __name__ == "__main__":
