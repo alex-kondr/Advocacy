@@ -21,6 +21,9 @@ naked = "^0.1.32"
 pydantic = {extras = ["email"], version = "^1.10.7"}
 requests-toolbelt = "^0.10.1"
 cloudinary = "^1.32.0"
+pydentic = "^0.0.1.dev3"
+psycopg2-binary = "^2.9.6"
+sqlalchemy = "^2.0.16"
 
 
 [build-system]
