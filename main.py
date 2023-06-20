@@ -1,9 +1,13 @@
 from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import uvicorn
+from sqlalchemy.orm import Session
+
+from src.database.db import get_db
+from src.repository.content import get_news
 
 
 app_dir = Path(__file__).parent
@@ -19,8 +23,9 @@ def index(request: Request):
 
 
 @app.get('/news')
-def index_test(request: Request):
-    return templates.TemplateResponse("news.html", {"request": request})
+async def index_test(request: Request, db: Session = Depends(get_db)):
+    content = await get_news(db)
+    return templates.TemplateResponse("news.html", {"request": request, "content": content})
 
 
 if __name__ == "__main__":

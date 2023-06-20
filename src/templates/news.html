@@ -2,9 +2,9 @@
 <html style="font-size: 16px;" lang="ua"><head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="Our Works, Management consulting, Get in touch">
+    <meta name="keywords" content="Sample Product">
     <meta name="description" content="">
-    <title>Сторінка 1</title>
+    <title>Новини</title>
     <link rel="stylesheet" href="{{url_for('static', path='css/nicepage.css')}}" media="screen">
     <link rel="stylesheet" href="{{url_for('static', path='css/news.css')}}" media="screen">
     <script class="u-script" type="text/javascript" src="{{url_for('static', path='js/jquery-1.9.1.min.js')}}" defer=""></script>
@@ -19,62 +19,30 @@
 		"name": ""
 }</script>
     <meta name="theme-color" content="#478ac9">
-    <meta property="og:title" content="Сторінка 1">
+    <meta property="og:title" content="Новини">
     <meta property="og:type" content="website">
   <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-  <body>
-    <section class="u-align-center u-clearfix u-container-align-center u-palette-1-base u-section-1" id="carousel_d430">
-      <div class="u-clearfix u-sheet u-sheet-1">
-        <h2 class="u-align-center u-text u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="750">Новини</h2>
-<!--        <p class="u-align-center u-text u-text-2" data-animation-name="customAnimationIn" data-animation-duration="1500"> Quam quisque id diam vel quam elementum. Vestibulum lectus mauris ultrices eros in cursus turpis massa tincidunt. Pellentesque habitant morbi tristique senectus et netus. </p>-->
-        <div class="u-expanded-width u-list u-list-1">
-          <div class="u-repeater u-repeater-1">
-            <div class="u-align-left u-container-style u-image u-list-item u-repeater-item u-shading u-image-1" data-image-width="740" data-image-height="1110" data-animation-name="customAnimationIn" data-animation-duration="1500">
-              <div class="u-container-layout u-similar-container u-container-layout-1">
-                <div class="u-align-center u-container-style u-expanded-width u-group u-opacity u-opacity-85 u-white u-group-1" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">
-                  <div class="u-container-layout u-valign-middle u-container-layout-2">
-                      <img src="{{url_for('static', path='/img/logo.jpg')}}">
-                    <h6 class="u-text u-text-3">Teambuilding</h6>
+  <body class="u-body u-xl-mode" data-lang="ua">
+    <section class="u-align-center u-clearfix u-palette-4-light-3 u-section-1" id="sec-6a78">
+        {% for cont in content %}
+          <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xl u-sheet-1"><!--product--><!--product_options_json--><!--{"source":""}--><!--/product_options_json--><!--product_item-->
+            <div class="u-container-style u-expanded-width u-product u-product-1">
+              <div class="u-container-layout u-container-layout-1">
+                <div class="u-align-center u-border-3 u-border-grey-30 u-container-style u-expanded-width-md u-expanded-width-sm u-expanded-width-xs u-group u-shape-rectangle u-group-1">
+                  <div class="u-container-layout u-valign-middle-xl u-container-layout-2"><!--product_title-->
+                    <h2 class="u-product-control u-text u-text-1">
+                      <a class="u-product-title-link"><!--product_title_content-->{{cont.title}}<!--/product_title_content--></a>
+                    </h2><!--/product_title--><!--product_content-->
+                    <div class="u-product-control u-product-desc u-text u-text-default u-text-2"><!--product_content_content-->
+                      <p>{{cont.body}}</p><!--/product_content_content-->
+                    </div><!--/product_content--><!--product_price-->
                   </div>
-                </div>
+                </div><!--product_image-->
+                <img alt="" class="u-expanded-width-md u-expanded-width-sm u-expanded-width-xs u-image u-image-default u-product-control u-image-1" data-image-width="2000" data-image-height="1333" src="{{cont.img}}"><!--/product_image-->
               </div>
-            </div>
-
-              <div class="u-align-left u-container-style u-image u-list-item u-repeater-item u-shading u-image-1" data-image-width="740" data-image-height="1110" data-animation-name="customAnimationIn" data-animation-duration="1500">
-              <div class="u-container-layout u-similar-container u-container-layout-1">
-                <div class="u-align-center u-container-style u-expanded-width u-group u-opacity u-opacity-85 u-white u-group-1" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">
-                  <div class="u-container-layout u-valign-middle u-container-layout-2">
-                      <img src="{{url_for('static', path='/img/logo.jpg')}}">
-                    <h6 class="u-text u-text-3">Teambuilding</h6>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-              <div class="u-align-left u-container-style u-image u-list-item u-repeater-item u-shading u-image-1" data-image-width="740" data-image-height="1110" data-animation-name="customAnimationIn" data-animation-duration="1500">
-              <div class="u-container-layout u-similar-container u-container-layout-1">
-                <div class="u-align-center u-container-style u-expanded-width u-group u-opacity u-opacity-85 u-white u-group-1" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">
-                  <div class="u-container-layout u-valign-middle u-container-layout-2">
-                      <img src="{{url_for('static', path='/img/logo.jpg')}}">
-                    <h6 class="u-text u-text-3">Teambuilding</h6>
-                  </div>
-                </div>
-              </div>
-            </div>
-              <div class="u-align-left u-container-style u-image u-list-item u-repeater-item u-shading u-image-1" data-image-width="740" data-image-height="1110" data-animation-name="customAnimationIn" data-animation-duration="1500">
-              <div class="u-container-layout u-similar-container u-container-layout-1">
-                <div class="u-align-center u-container-style u-expanded-width u-group u-opacity u-opacity-85 u-white u-group-1" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">
-                  <div class="u-container-layout u-valign-middle u-container-layout-2">
-                      <img src="{{url_for('static', path='/img/logo.jpg')}}">
-                    <h6 class="u-text u-text-3">Teambuilding</h6>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
+            </div><!--/product_item--><!--/product-->
           </div>
-        </div>
-      </div>
+        {% endfor %}
+
     </section>
 </body></html>

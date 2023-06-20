@@ -1,4 +1,5 @@
 fastapi
+jinja2
 psycopg2-binary
 cloudinary
 sqlalchemy

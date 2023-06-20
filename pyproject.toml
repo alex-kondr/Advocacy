@@ -24,6 +24,7 @@ cloudinary = "^1.32.0"
 pydentic = "^0.0.1.dev3"
 psycopg2-binary = "^2.9.6"
 sqlalchemy = "^2.0.16"
+alembic = "^1.11.1"
 
 
 [build-system]
