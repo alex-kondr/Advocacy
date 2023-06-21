@@ -1,16 +1,18 @@
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union, Annotated
 
-from fastapi import FastAPI, Request, Depends, HTTPException, status, Query
+from fastapi import FastAPI, Request, Depends, HTTPException, status, Query, File, UploadFile, Form
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 import uvicorn
+from psycopg2 import OperationalError, Error
 
 from src.database.db import get_db
 from src.database.models import User
-from src.repository.content import get_news
+from src.repository import content as repository_content
+from src.repository.upload_img import upload_img
 from src.repository.auth import auth_service
 
 
@@ -28,16 +30,26 @@ def index(request: Request):
 
 @app.get('/news')
 async def news(request: Request, token: Optional[str] = Query(default=None), db: Session = Depends(get_db)):
-    content = await get_news(db)
-
+    invalid_token = False
     name = ''
-    print(f"{token=}")
-    if token:
-        name = await auth_service.get_current_user(token, db)
+    content = None
+
+    try:
+        content = await repository_content.get_news(db)
+
+        if token:
+            name = await auth_service.get_current_user(token, db)
+            if not name:
+                invalid_token = True
+
+    except:
+        invalid_token = True
+
     return templates.TemplateResponse("news.html", {
         "request": request,
         "content": content,
-        "name": name
+        "name": name,
+        "invalid_token": invalid_token
     })
 
 
@@ -46,14 +58,45 @@ async def login(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 
+@app.get('/add_news')
+async def add_news(request: Request):
+    return templates.TemplateResponse("add_news.html", {"request": request})
+
+
+@app.post('/add_news')
+async def add_news(
+        request: Request,
+        token: Optional[str] = Query(default=None),
+        title: Annotated[str, Form()] = None,
+        body: Annotated[str, Form()] = None,
+        file: Union[UploadFile, None] = None,
+        db: Session = Depends(get_db)
+
+):
+    message = ""
+
+    try:
+
+        if token and await auth_service.get_current_user(token, db) and (title or body or file):
+            url = upload_img(file) if file.filename else None
+            await repository_content.add_news(db, title, body, url=url)
+        else:
+            message = "Потрібно залогінитись"
+        print(f"{message=}")
+
+    except OperationalError as err:
+        print(err)
+    # return templates.TemplateResponse("news.html", {"request": request})
+
+
 @app.post('/login')
 async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)) -> dict:
-    user = await db.query(User).filter_by(name=body.username).first()
+    user = db.query(User).filter_by(name=body.username).first()
 
     if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid name")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Не вірний логін")
     if not auth_service.verify_password(body.password, user.password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Не вірний пароль")
 
     access_token: str = await auth_service.create_access_token(data={'sub': user.name})
     return {'access_token': access_token, 'token_type': 'bearer'}

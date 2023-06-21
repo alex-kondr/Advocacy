@@ -6,4 +6,5 @@ sqlalchemy
 pydantic[dotenv]
 uvicorn
 python-jose
+python-multipart
 passlib

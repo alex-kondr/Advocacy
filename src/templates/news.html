@@ -2,6 +2,29 @@
 
 {% block body %}
 
+<br><br><br><br>
+
+{% if name %}
+
+<div class="u-align-center u-form-group u-form-submit u-label-top">
+    <a href="/add_news" class="u-active-black u-border-none u-btn u-btn-round u-btn-submit u-button-style u-hover-black u-palette-3-base u-radius-7 u-text-active-white u-text-body-alt-color u-text-hover-white u-btn-1">
+        Додати новину
+    </a>
+    <input type="submit" value="submit" class="u-form-control-hidden" wfd-invisible="true">
+</div>
+
+{% elif not invalid_token %}
+
+<script>
+    access_token = localStorage.getItem("access_token")
+    if (access_token) {
+        window.location = `../news?token=${access_token}`
+}
+</script>
+
+{% endif %}
+
+
 <html style="font-size: 16px;" lang="ua"><head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
@@ -27,6 +50,8 @@
   <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
   <body class="u-body u-xl-mode" data-lang="ua">
     <section class="u-align-center u-clearfix u-palette-4-light-3 u-section-1" id="sec-6a78">
+
+        {% if content %}
         {% for cont in content %}
           <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xl u-sheet-1"><!--product--><!--product_options_json--><!--{"source":""}--><!--/product_options_json--><!--product_item-->
             <div class="u-container-style u-expanded-width u-product u-product-1">
@@ -46,7 +71,9 @@
             </div><!--/product_item--><!--/product-->
           </div>
         {% endfor %}
+        {% endif %}
 
     </section>
+  </body>
 </html>
 {% endblock %}

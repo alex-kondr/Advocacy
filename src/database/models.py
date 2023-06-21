@@ -11,8 +11,8 @@ class Content(Base):
     __tablename__ = 'content'
     id = Column(Integer, primary_key=True)
     title = Column(String(50), nullable=True)
-    body = Column(String(255), nullable=True)
-    img = Column(String(255), nullable=True)
+    body = Column(String(255), nullable=True, default=None)
+    img = Column(String(255), nullable=True, default=None)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 

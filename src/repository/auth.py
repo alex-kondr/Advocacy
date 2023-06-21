@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Type
 from datetime import datetime, timedelta
 
 from jose import JWTError, jwt
@@ -53,10 +53,10 @@ class Auth:
             self.credentials_exception()
         return name
 
-    async def get_current_user(self, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
+    async def get_current_user(self, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> Type[User]:
         name = self.verify_access_token(token)
 
-        user = await db.query(User).filter_by(name=name).first() if name else None
+        user = db.query(User).filter_by(name=name).first() if name else None
         if user is None:
             self.credentials_exception()
         return user
