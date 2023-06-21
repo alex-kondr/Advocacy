@@ -23,7 +23,7 @@ def index(request: Request):
 
 
 @app.get('/news')
-async def index_test(request: Request, db: Session = Depends(get_db)):
+async def news(request: Request, db: Session = Depends(get_db)):
     content = await get_news(db)
     return templates.TemplateResponse("news.html", {"request": request, "content": content})
 
