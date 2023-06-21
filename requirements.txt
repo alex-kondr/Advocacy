@@ -5,3 +5,5 @@ cloudinary
 sqlalchemy
 pydantic[dotenv]
 uvicorn
+python-jose
+passlib
