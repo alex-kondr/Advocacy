@@ -1,15 +1,11 @@
 const form = document.forms[0]
-//access_token = localStorage.getItem("access_token")
-//
-//if (access_token) {
-//    window.location = `../news?token=${access_token}`
-//}
 
 form.addEventListener('submit', async event => {
   event.preventDefault()
   message.innerHTML = "Перевірка"
   const response = await fetch(
-    'http://localhost:8000/login',
+    '/login',
+//    'https://advocacy-advocacy.koyeb.app/login',
     {
       method: 'POST',
       headers: {

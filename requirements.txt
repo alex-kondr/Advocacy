@@ -8,3 +8,4 @@ uvicorn
 python-jose
 python-multipart
 passlib
+redis

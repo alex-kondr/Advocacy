@@ -2,7 +2,7 @@ from typing import Optional, Type
 from datetime import datetime, timedelta
 
 from jose import JWTError, jwt
-from fastapi import HTTPException, status, Depends
+from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from src.database.models import User
 from src.database.db import get_db
 from src.conf.config import settings
+from src.repository import user as repository_user
 
 
 class Auth:
@@ -40,7 +41,7 @@ class Auth:
         return encoded_access_token
 
     def verify_access_token(self, token: str = Depends(oauth2_scheme)) -> str:
-        name = ''
+        name = None
         try:
             payload = jwt.decode(token, self.SECRET_KEY, algorithms=[self.ALGORITHM])
             if payload.get('scope') == 'access_token':
@@ -49,16 +50,14 @@ class Auth:
                     self.credentials_exception()
             else:
                 self.credentials_exception()
-        except JWTError as e:
+        except JWTError:
             self.credentials_exception()
         return name
 
-    async def get_current_user(self, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> Type[User]:
+    async def get_current_user(self, token: str = Depends(oauth2_scheme),
+                               db: Session = Depends(get_db)) -> Optional[User]:
         name = self.verify_access_token(token)
-
-        user = db.query(User).filter_by(name=name).first() if name else None
-        if user is None:
-            self.credentials_exception()
+        user = await repository_user.get_user(name, db)
         return user
 
 

@@ -12,3 +12,5 @@ async def add_news(db: Session, title: str = None, body: str = None, url=None):
     news = Content(img=url, title=title, body=body)
     db.add(news)
     db.commit()
+    db.refresh(news)
+    return news
