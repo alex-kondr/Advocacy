@@ -17,7 +17,7 @@ cloudinary.config(
 
 
 def upload_img(file: UploadFile) -> str:
-    public_id = uuid4().hex
+    public_id = f"Advocacy/{uuid4().hex}"
     cloudinary.uploader.upload(file.file, public_id=public_id, overwrite=True)
     image_info = cloudinary.api.resource(public_id)
     src_url = image_info['secure_url']

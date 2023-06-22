@@ -5,7 +5,6 @@ form.addEventListener('submit', async event => {
   message.innerHTML = "Перевірка"
   const response = await fetch(
     '/login',
-//    'https://advocacy-advocacy.koyeb.app/login',
     {
       method: 'POST',
       headers: {
@@ -31,7 +30,7 @@ form.addEventListener('submit', async event => {
     console.log("login unsuccesfull")
   }
   else {
-    message.innerHTML = "Помилка бази даних"
+    message.innerHTML = "Помилка підключення до бази даних"
     console.log("login unsuccesfull")
   }
 })
