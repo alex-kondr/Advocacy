@@ -54,6 +54,9 @@
                 </div><!--product_image-->
                 <img alt="" class="u-expanded-width-md u-expanded-width-sm u-expanded-width-xs u-image u-image-default u-product-control u-image-1" data-image-width="2000" data-image-height="1333" src="{{content.img}}"><!--/product_image-->
 
+              </div>
+            </div><!--/product_item--><!--/product-->
+          </div>
                   {% if authorize %}
                   <div class="u-align-right u-form-group u-form-submit u-label-top">
                     <a href="/news/{{content.id}}?token={{token}}"
@@ -62,9 +65,6 @@
                     </a>
                   </div>
                   {% endif %}
-              </div>
-            </div><!--/product_item--><!--/product-->
-          </div>
         {% endfor %}
 
     </section>
