@@ -1,8 +1,7 @@
 from pathlib import Path
 from typing import Optional, Union, Annotated
 
-from fastapi import FastAPI, Request, Depends, HTTPException, status, Query, File, UploadFile, Form, APIRouter, Response
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import Request, Depends, Query, UploadFile, Form, APIRouter
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -10,7 +9,6 @@ from sqlalchemy.orm import Session
 from psycopg2 import OperationalError
 
 from src.database.db import get_db
-from src.database.models import User
 from src.repository import content as repository_content
 from src.repository.upload_img import upload_img
 from src.repository.auth import auth_service
@@ -23,13 +21,30 @@ templates = Jinja2Templates(directory=app_dir / "templates")
 
 
 @router.get('/add')
-async def add_news(request: Request):
-    return templates.TemplateResponse("add_news.html", {"request": request})
+async def add_news(request: Request,
+                   token: Optional[str] = Query(default=None),
+                   db: Session = Depends(get_db)
+                   ):
+    message = None
+    try:
+        if not await auth_service.get_current_user(token, db):
+            message = "Потрібно авторизуватись."
+
+    except OperationalError as err:
+        print(err)
+        message = "Помилка підключення до бази даних."
+
+    print(f"{message=}")
+
+    return templates.TemplateResponse("add_news.html", {"request": request,
+                                                        "message": message,
+                                                        "token": token,
+                                                        }
+                                      )
 
 
 @router.post('/add')
 async def add_news(
-        request: Request,
         title: Annotated[str, Form()],
         body: Annotated[str, Form()],
         token: Optional[str] = Query(default=None),
@@ -37,50 +52,47 @@ async def add_news(
         db: Session = Depends(get_db)
 
 ):
-    message = ""
-    print(f"{token=}")
-    print(f"{title=}")
-    print(f"{body=}")
 
     try:
-        if token and await auth_service.get_current_user(token, db) and (title or body or file):
+        if await auth_service.get_current_user(token, db):
             url = upload_img(file) if file.filename else None
             await repository_content.add_news(db, title, body, url)
         else:
-            message = "Потрібно залогінитись"
-        print(f"{message=}")
+            print("Потрібно залогінитись")
 
     except OperationalError as err:
         print(err)
-    # return RedirectResponse("/news")
 
 
 @router.get('/')
 async def news(request: Request, token: Optional[str] = Query(default=None), db: Session = Depends(get_db)):
-    invalid_token = False
     user = None
-    content = None
+    contents = []
 
     try:
-        content = await repository_content.get_news(db)
+        contents = await repository_content.get_news(db)
+        user = await auth_service.get_current_user(token, db)
 
-        if token:
-            user = await auth_service.get_current_user(token, db)
-            if not user:
-                invalid_token = True
-                # print("except")
-
-    except:
-        invalid_token = True
-        print("except")
-
-    # print(f"{content=}")
-    # print(f"{user=}")
-    # print(f"{invalid_token=}")
+    except OperationalError as err:
+        print(err)
 
     return templates.TemplateResponse("news.html", {
         "request": request,
-        "content": content,
-        "name": user,
-        "invalid_token": invalid_token
+        "contents": contents,
+        "authorize": True if user else False,
+        "token": token
     })
+
+
+@router.get('/{news_id}')
+async def add_news(news_id: int,
+                   token: Optional[str] = Query(default=None),
+                   db: Session = Depends(get_db)
+                   ):
+    try:
+        if await auth_service.get_current_user(token, db):
+            await repository_content.delete_news(news_id, db)
+            return RedirectResponse(f"/news?token={token}")
+
+    except OperationalError as err:
+        print(err)

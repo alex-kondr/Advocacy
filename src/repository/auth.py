@@ -1,4 +1,4 @@
-from typing import Optional, Type
+from typing import Optional
 from datetime import datetime, timedelta
 
 from jose import JWTError, jwt
@@ -18,9 +18,6 @@ class Auth:
     SECRET_KEY = settings.secret_key
     ALGORITHM = "HS256"
     oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/login')
-
-    def credentials_exception(self):
-        print("401_UNAUTHORIZED")
 
     def verify_password(self, plain_password: str, hashed_password: str) -> bool:
         return self.pwd_context.verify(plain_password, hashed_password)
@@ -43,15 +40,11 @@ class Auth:
     def verify_access_token(self, token: str = Depends(oauth2_scheme)) -> str:
         name = None
         try:
-            payload = jwt.decode(token, self.SECRET_KEY, algorithms=[self.ALGORITHM])
+            payload = jwt.decode(token or "", self.SECRET_KEY, algorithms=[self.ALGORITHM])
             if payload.get('scope') == 'access_token':
                 name = payload.get('sub')
-                if name is None:
-                    self.credentials_exception()
-            else:
-                self.credentials_exception()
-        except JWTError:
-            self.credentials_exception()
+        except JWTError as err:
+            print(err)
         return name
 
     async def get_current_user(self, token: str = Depends(oauth2_scheme),

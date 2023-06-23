@@ -1,10 +1,13 @@
 import pickle
 from pathlib import Path
+from typing import Optional
 
-from fastapi import Request, Depends, HTTPException, status, APIRouter
+from fastapi import Request, Depends, HTTPException, status, APIRouter, Query
+from fastapi.responses import RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from psycopg2 import OperationalError
 from sqlalchemy.orm import Session
 
 from src.database.db import get_db, client_redis
@@ -21,7 +24,18 @@ templates = Jinja2Templates(directory=app_dir / "templates")
 
 
 @router.get('/')
-async def login(request: Request):
+async def login(request: Request,
+                token: Optional[str] = Query(default=None),
+                db: Session = Depends(get_db)
+                ):
+
+    try:
+        if await auth_service.get_current_user(token, db):
+            return RedirectResponse(f"/news?token={token}")
+
+    except OperationalError as err:
+        print(err)
+
     return templates.TemplateResponse("login.html", {"request": request})
 
 

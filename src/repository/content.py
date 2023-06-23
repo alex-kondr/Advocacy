@@ -14,3 +14,8 @@ async def add_news(db: Session, title: str = None, body: str = None, url=None):
     db.commit()
     db.refresh(news)
     return news
+
+
+async def delete_news(news_id: int, db: Session):
+    db.query(Content).filter_by(id=news_id).delete()
+    db.commit()

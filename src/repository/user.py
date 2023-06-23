@@ -8,6 +8,9 @@ from src.database.models import User
 
 
 async def get_user(name: str, db: Session) -> Optional[User]:
+    if name is None:
+        return
+
     user_byte = await client_redis.get(name)
     if user_byte:
         user = pickle.loads(user_byte)
