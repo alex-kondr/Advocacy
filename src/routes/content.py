@@ -85,7 +85,7 @@ async def news(request: Request, token: Optional[str] = Query(default=None), db:
 
 
 @router.get('/{news_id}')
-async def add_news(news_id: int,
+async def delete_news(news_id: int,
                    token: Optional[str] = Query(default=None),
                    db: Session = Depends(get_db)
                    ):
