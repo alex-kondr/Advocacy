@@ -7,7 +7,7 @@ import redis.asyncio as redis
 from src.conf.config import settings
 
 
-SQLALCHEMY_DATABASE_URL = settings.sqlalchemy_database_url
+SQLALCHEMY_DATABASE_URL = settings.sqlalchemy_database_url_advocacy
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
