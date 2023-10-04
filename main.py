@@ -1,19 +1,10 @@
 from pathlib import Path
-from typing import Optional, Union, Annotated
 
-from fastapi import FastAPI, Request, Depends, HTTPException, status, Query, File, UploadFile, Form
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from sqlalchemy.orm import Session
 import uvicorn
-from psycopg2 import OperationalError, Error
 
-from src.database.db import get_db
-from src.database.models import User
-from src.repository import content as repository_content
-from src.repository.upload_img import upload_img
-from src.repository.auth import auth_service
 from src.routes import content
 from src.routes import auth
 
